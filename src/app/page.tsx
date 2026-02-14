@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar'
 import StatsBar from '@/components/StatsBar'
 import CollectionCard from '@/components/CollectionCard'
 import Skeleton from '@/components/Skeleton'
+import RecentSales from '@/components/RecentSales'
 
 interface CollectionInfo {
   address: string
@@ -39,13 +40,16 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <Navbar />
-      <div className="px-4 py-8 max-w-6xl mx-auto">
+      <div className="px-4 py-8 max-w-7xl mx-auto">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-white mb-1">Otherside Marketplace</h1>
         <p className="text-neutral-500 text-sm">NFT Listings on ApeChain</p>
       </div>
 
       <StatsBar totalListings={totalListings} totalCollections={collections.length} totalSales={totalSales} />
+
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+      <div>
 
       <input
         type="text"
@@ -70,6 +74,12 @@ export default function Home() {
           ))}
         </div>
       )}
+
+      </div>
+
+      {/* Sidebar: Recent Sales */}
+      <RecentSales />
+      </div>
       </div>
     </main>
   )
