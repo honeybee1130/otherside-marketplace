@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import { fetchAllListings } from '@/lib/apechain'
 
 let cache: { data: any, ts: number } | null = null
-const TTL = 5 * 60 * 1000 // 5 min
+const TTL = 60 * 1000 // 1 min
 
 export async function GET() {
   const now = Date.now()

@@ -11,6 +11,7 @@ export default function ListingCard({ idx, tokenId, price, priceRaw, seller, exp
   const [nftName, setNftName] = useState<string | null>(null)
   const [loaded, setLoaded] = useState(false)
   const [errored, setErrored] = useState(false)
+  const [purchased, setPurchased] = useState(false)
 
   useEffect(() => {
     if (!collection) return
@@ -24,6 +25,8 @@ export default function ListingCard({ idx, tokenId, price, priceRaw, seller, exp
   }, [collection, tokenId])
 
   const initial = (collectionName || collection || '?')[0].toUpperCase()
+
+  if (purchased) return null
 
   return (
     <motion.div
@@ -61,7 +64,7 @@ export default function ListingCard({ idx, tokenId, price, priceRaw, seller, exp
         {collectionName && <div className="text-xs text-neutral-400 mb-2 truncate">{collectionName}</div>}
         <div className="text-xl font-bold text-white mb-2">{parseFloat(price).toFixed(2)} <span className="text-sm text-accent">APE</span></div>
         <div className="text-xs text-neutral-500">Seller: {truncateAddress(seller)}</div>
-        <BuyButton idx={idx} priceRaw={priceRaw} price={price} paymentMethod={paymentMethod} />
+        <BuyButton idx={idx} priceRaw={priceRaw} price={price} paymentMethod={paymentMethod} onPurchased={() => setPurchased(true)} />
       </div>
     </motion.div>
   )

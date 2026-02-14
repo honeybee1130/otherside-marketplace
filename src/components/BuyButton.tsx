@@ -11,11 +11,12 @@ const abi = parseAbi([
   'function fulfillListing(address buyer, uint256[] orderIds) payable',
 ])
 
-export default function BuyButton({ idx, priceRaw, price, paymentMethod }: {
+export default function BuyButton({ idx, priceRaw, price, paymentMethod, onPurchased }: {
   idx: number
   priceRaw: string
   price: string
   paymentMethod?: string
+  onPurchased?: () => void
 }) {
   const { address, isConnected, chainId } = useAccount()
   const { openConnectModal } = useConnectModal()
@@ -46,6 +47,7 @@ export default function BuyButton({ idx, priceRaw, price, paymentMethod }: {
         value: isNativePayment ? BigInt(priceRaw) : BigInt(0),
       })
       setStatus('success')
+      onPurchased?.()
       setTimeout(() => setStatus('idle'), 3000)
     } catch (e: any) {
       console.error('Buy failed:', e)
