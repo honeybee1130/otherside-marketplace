@@ -119,9 +119,12 @@ export async function fetchAllListings(): Promise<{ listings: Listing[], collect
   const now = Math.floor(Date.now() / 1000)
   const listings: Listing[] = []
   const executed: number[] = []
-  const BATCH = 20
+  const BATCH = 50
+  
+  // Only scan last 800 orders — active listings are recent, no need to scan from 0
+  const start = Math.max(0, total - 800)
 
-  for (let i = 0; i < total; i += BATCH) {
+  for (let i = start; i < total; i += BATCH) {
     const end = Math.min(i + BATCH, total)
     const promises = []
     for (let j = i; j < end; j++) {
@@ -136,26 +139,35 @@ export async function fetchAllListings(): Promise<{ listings: Listing[], collect
       )
     }
     const results = await Promise.all(promises)
-    for (const r of results) {
-      if (!r) continue
+    const active = results.filter(r => {
+      if (!r) return false
       const [signedOrder, isExecuted] = r.data as any
-      if (isExecuted) { executed.push(r.idx); continue }
-      const sd = signedOrder.saleDetails
-      const exp = Number(sd.expiration)
-      if (exp !== 0 && exp < now) continue
+      if (isExecuted) { executed.push(r.idx); return false }
+      const exp = Number(signedOrder.saleDetails.expiration)
+      if (exp !== 0 && exp < now) return false
+      return true
+    })
 
-      const name = await getCollectionName(sd.tokenAddress)
+    // Resolve names in parallel
+    const namePromises = active.map(r => {
+      const sd = (r!.data as any)[0].saleDetails
+      return getCollectionName(sd.tokenAddress)
+    })
+    const names = await Promise.all(namePromises)
+
+    active.forEach((r, i) => {
+      const sd = (r!.data as any)[0].saleDetails
       listings.push({
-        idx: r.idx,
+        idx: r!.idx,
         collection: sd.tokenAddress.toLowerCase(),
-        collectionName: name,
+        collectionName: names[i],
         tokenId: sd.tokenId.toString(),
         price: formatEther(sd.itemPrice),
         priceRaw: sd.itemPrice.toString(),
         seller: sd.maker,
-        expiration: exp,
+        expiration: Number(sd.expiration),
       })
-    }
+    })
   }
 
   // Build collection info
