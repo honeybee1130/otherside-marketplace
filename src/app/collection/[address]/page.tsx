@@ -55,7 +55,7 @@ export default function CollectionPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {listings.map(l => (
-            <ListingCard key={l.idx} idx={l.idx} tokenId={l.tokenId} price={l.price} priceRaw={l.priceRaw} seller={l.seller} expiration={l.expiration} />
+            <ListingCard key={l.idx} idx={l.idx} tokenId={l.tokenId} price={l.price} priceRaw={l.priceRaw} seller={l.seller} expiration={l.expiration} collection={l.collection} collectionName={l.collectionName} />
           ))}
         </div>
       )}
