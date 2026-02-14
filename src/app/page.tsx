@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import Navbar from '@/components/Navbar'
 import StatsBar from '@/components/StatsBar'
 import CollectionCard from '@/components/CollectionCard'
 import Skeleton from '@/components/Skeleton'
@@ -36,7 +37,9 @@ export default function Home() {
   )
 
   return (
-    <main className="min-h-screen px-4 py-8 max-w-6xl mx-auto">
+    <main className="min-h-screen">
+      <Navbar />
+      <div className="px-4 py-8 max-w-6xl mx-auto">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-white mb-1">Otherside Marketplace</h1>
         <p className="text-neutral-500 text-sm">NFT Listings on ApeChain</p>
@@ -67,6 +70,7 @@ export default function Home() {
           ))}
         </div>
       )}
+      </div>
     </main>
   )
 }

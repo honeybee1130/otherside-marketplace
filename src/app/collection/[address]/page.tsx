@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import Navbar from '@/components/Navbar'
 import ListingCard from '@/components/ListingCard'
 import Skeleton from '@/components/Skeleton'
 
@@ -38,7 +39,9 @@ export default function CollectionPage() {
   }, [address])
 
   return (
-    <main className="min-h-screen px-4 py-8 max-w-6xl mx-auto">
+    <main className="min-h-screen">
+      <Navbar />
+      <div className="px-4 py-8 max-w-6xl mx-auto">
       <Link href="/" className="text-accent text-sm hover:underline mb-4 inline-block">← Back</Link>
       <h1 className="text-2xl font-bold text-white mb-1">{name || address}</h1>
       <p className="text-neutral-500 text-sm mb-6">{listings.length} listing{listings.length !== 1 ? 's' : ''}</p>
@@ -52,10 +55,11 @@ export default function CollectionPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {listings.map(l => (
-            <ListingCard key={l.idx} tokenId={l.tokenId} price={l.price} seller={l.seller} expiration={l.expiration} />
+            <ListingCard key={l.idx} idx={l.idx} tokenId={l.tokenId} price={l.price} priceRaw={l.priceRaw} seller={l.seller} expiration={l.expiration} />
           ))}
         </div>
       )}
+      </div>
     </main>
   )
 }
